@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trading Journal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main container for the entire app -->
+    <div class="app-container">
+
+        <!-- Header section with title and stats dashboard -->
+        <header class="header">
+            <h1>Crypto Trading Journal</h1>
+            <div class="stats-dashboard">
+                <!-- Overall stats section -->
+                <div class="stats-section">
+                    <h3>Overall Performance</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Total PnL:</span>
+                            <span id="totalPnl" class="stat-value">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Trades:</span>
+                            <span id="totalTrades" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Win Rate:</span>
+                            <span id="winRate" class="stat-value">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg Win:</span>
+                            <span id="avgWin" class="stat-value">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg Loss:</span>
+                            <span id="avgLoss" class="stat-value">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scalp stats section -->
+                <div class="stats-section">
+                    <h3>Scalp Performance</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">PnL:</span>
+                            <span id="scalpPnl" class="stat-value">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Trades:</span>
+                            <span id="scalpTrades" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Win Rate:</span>
+                            <span id="scalpWinRate" class="stat-value">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Swing stats section -->
+                <div class="stats-section">
+                    <h3>Swing Performance</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">PnL:</span>
+                            <span id="swingPnl" class="stat-value">$0.00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Trades:</span>
+                            <span id="swingTrades" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Win Rate:</span>
+                            <span id="swingWinRate" class="stat-value">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content area with form and history -->
+        <main class="main-content">
+
+            <!-- Left panel: Trade entry form -->
+            <section class="left-panel">
+                <div class="form-container">
+                    <h2>Add New Trade</h2>
+                    <form id="tradeForm">
+
+                        <!-- Trade Setup dropdown -->
+                        <div class="form-group">
+                            <label for="tradeSetup">Trade Type & Setup *</label>
+                            <select id="tradeSetup" required>
+                                <option value="">Select trade setup...</option>
+                                <optgroup label="Scalp">
+                                    <option value="Scalp: W">W - Wall Frontrun</option>
+                                    <option value="Scalp: T">T - Technical</option>
+                                    <option value="Scalp: V">V - Velodata</option>
+                                </optgroup>
+                                <optgroup label="Swing">
+                                    <option value="Swing: PB">PB - Pattern Break</option>
+                                    <option value="Swing: N">N - Narrative</option>
+                                    <option value="Swing: I">I - Inspired</option>
+                                </optgroup>
+                            </select>
+                            <div class="tooltip">Choose your trade type and specific setup pattern</div>
+                        </div>
+
+                        <!-- Risk:Reward ratio input -->
+                        <div class="form-group">
+                            <label for="rr">R:R Ratio *</label>
+                            <input type="text" id="rr" placeholder="1.5:1" required pattern="^\d+(\.\d+)?:1$">
+                            <div class="tooltip">Format: number:1 (e.g., 1:1, 1.3:1, 2.5:1)</div>
+                            <div id="rrError" class="error-message"></div>
+                        </div>
+
+                        <!-- PnL input -->
+                        <div class="form-group">
+                            <label for="pnl">PnL (USD) *</label>
+                            <input type="number" id="pnl" step="0.01" placeholder="150.00" required>
+                            <div class="tooltip">Profit/Loss in USD (use negative for losses)</div>
+                        </div>
+
+                        <!-- Active Management dropdown -->
+                        <div class="form-group">
+                            <label for="activeMgmt">Active Management *</label>
+                            <select id="activeMgmt" required>
+                                <option value="">Select management result...</option>
+                                <option value="+EV">+EV (Positive Expected Value)</option>
+                                <option value="-EV">-EV (Negative Expected Value)</option>
+                                <option value="N/A">N/A (Passive/No Active Management)</option>
+                            </select>
+                            <div class="tooltip">Rate whether active management decisions helped or hurt</div>
+                        </div>
+
+                        <!-- Execution quality dropdown -->
+                        <div class="form-group">
+                            <label for="execution">Execution Quality *</label>
+                            <select id="execution" required>
+                                <option value="">Rate execution quality...</option>
+                                <option value="A">A - Properly planned and executed</option>
+                                <option value="B">B - Small issues</option>
+                                <option value="C">C - Mistakes were made</option>
+                            </select>
+                            <div class="tooltip">Self-assess your trade planning and execution quality</div>
+                        </div>
+
+                        <!-- Optional notes -->
+                        <div class="form-group">
+                            <label for="note">Notes (Optional)</label>
+                            <textarea id="note" rows="3" placeholder="Additional context or observations..."></textarea>
+                            <div class="tooltip">Optional qualitative remarks about the trade</div>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="submit-btn">Add Trade</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Right panel: Trade history and controls -->
+            <section class="right-panel">
+
+                <!-- Export/Import controls -->
+                <div class="controls-section">
+                    <h2>Data Management</h2>
+                    <div class="control-buttons">
+                        <button id="exportBtn" class="control-btn">Export CSV</button>
+                        <label for="importFile" class="control-btn">Import CSV</label>
+                        <input type="file" id="importFile" accept=".csv" style="display: none;">
+                        <button id="clearBtn" class="control-btn danger">Clear All Data</button>
+                    </div>
+                    <div id="importStatus" class="status-message"></div>
+                </div>
+
+                <!-- Trade history table -->
+                <div class="history-section">
+                    <h2>Trade History</h2>
+                    <div class="table-container">
+                        <table id="tradesTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Setup</th>
+                                    <th>R:R</th>
+                                    <th>PnL</th>
+                                    <th>Active Mgmt</th>
+                                    <th>Execution</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tradesTableBody">
+                                <!-- Trade rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                        <div id="noTrades" class="no-data">No trades recorded yet. Add your first trade!</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Link to JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
