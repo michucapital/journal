@@ -14,19 +14,19 @@
     --text-primary: #ffffff;        /* Main text - white */
     --text-secondary: #b0b8c5;      /* Secondary text - light gray */
     --text-muted: #8892a4;          /* Muted text - darker gray */
-
+    
     /* Accent colors */
     --accent-primary: #4a90e2;      /* Primary blue */
     --accent-hover: #357abd;        /* Darker blue for hover */
     --success: #27ae60;             /* Green for positive PnL */
     --danger: #e74c3c;              /* Red for negative PnL */
     --warning: #f39c12;             /* Orange for warnings */
-
+    
     /* Border colors */
     --border-light: #3a404a;        /* Light borders */
     --border-medium: #4a5058;       /* Medium borders */
     --border-dark: #2a2f36;         /* Dark borders */
-
+    
     /* Table row alternating colors */
     --row-even: rgba(255, 255, 255, 0.03);
     --row-hover: rgba(255, 255, 255, 0.08);
@@ -299,38 +299,6 @@ body {
     background-color: #c0392b;
     border-color: #c0392b;
 }
-.edit-btn {
-  background-color: var(--accent-primary);
-  border: none;
-  color: white;
-  font-weight: bold;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.edit-btn:hover {
-  background-color: var(--accent-hover);
-}
-
-.cancel-btn {
-  margin-top: -10px;
-  margin-bottom: 15px;
-  padding: 8px 14px;
-  background-color: var(--danger);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  display: none; /* initially hidden */
-}
-
-.cancel-btn:hover {
-  background-color: #c0392b;
-}
-
 
 /* Status message styling */
 .status-message {
@@ -449,7 +417,7 @@ body {
         grid-template-columns: 1fr;
         gap: 16px;
     }
-
+    
     .stats-section:first-child .stats-grid {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -461,16 +429,16 @@ body {
         gap: 16px;
         padding: 16px;
     }
-
+    
     .left-panel {
         position: static;
         order: 2;
     }
-
+    
     .right-panel {
         order: 1;
     }
-
+    
     .stats-section:first-child .stats-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -480,28 +448,28 @@ body {
     .header {
         padding: 16px;
     }
-
+    
     .header h1 {
         font-size: 24px;
     }
-
+    
     .control-buttons {
         flex-direction: column;
     }
-
+    
     .control-btn {
         text-align: center;
     }
-
+    
     .stats-section:first-child .stats-grid {
         grid-template-columns: 1fr;
     }
-
+    
     /* Make table more mobile-friendly */
     #tradesTable {
         font-size: 11px;
     }
-
+    
     #tradesTable th,
     #tradesTable td {
         padding: 6px 4px;
@@ -536,4 +504,38 @@ body {
 .form-group select.valid {
     border-color: var(--success);
     box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+/* Edit button in trade history rows */
+.edit-btn {
+  background-color: var(--accent-primary);
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Cancel Edit button in the form */
+.cancel-btn {
+  margin-top: -10px;
+  margin-bottom: 15px;
+  padding: 8px 14px;
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  display: none; /* initially hidden */
+}
+
+.cancel-btn:hover {
+  background-color: #c0392b;
 }
