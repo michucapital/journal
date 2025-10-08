@@ -299,6 +299,38 @@ body {
     background-color: #c0392b;
     border-color: #c0392b;
 }
+.edit-btn {
+  background-color: var(--accent-primary);
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.cancel-btn {
+  margin-top: -10px;
+  margin-bottom: 15px;
+  padding: 8px 14px;
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  display: none; /* initially hidden */
+}
+
+.cancel-btn:hover {
+  background-color: #c0392b;
+}
+
 
 /* Status message styling */
 .status-message {
