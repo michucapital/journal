@@ -105,6 +105,17 @@ class TradingJournal {
         }
     }
 
+    getFormData() {
+      return {
+        tradeSetup: document.getElementById('tradeSetup').value,
+        rr: document.getElementById('rr').value.trim(),
+        pnl: document.getElementById('pnl').value,
+        activeMgmt: document.getElementById('activeMgmt').value,
+        execution: document.getElementById('execution').value,
+        note: document.getElementById('note').value.trim(),
+      };
+    }
+
     // ===== EVENT LISTENERS SETUP =====
     setupEventListeners() {
         // Form submission
