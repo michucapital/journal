@@ -93,12 +93,14 @@
                         <!-- Trade Setup dropdown -->
                         <div class="form-group">
                             <label for="tradeSetup">Trade Type & Setup *</label>
+                            <!-- Relevant snippet from index.html -->
                             <select id="tradeSetup" required>
                                 <option value="">Select trade setup...</option>
                                 <optgroup label="Scalp">
                                     <option value="Scalp: W">W - Wall Frontrun</option>
                                     <option value="Scalp: T">T - Technical</option>
                                     <option value="Scalp: V">V - Velodata</option>
+                                    <option value="Scalp: Other">Other - Experimental/Unclassified</option>
                                 </optgroup>
                                 <optgroup label="Swing">
                                     <option value="Swing: PB">PB - Pattern Break</option>
@@ -106,6 +108,7 @@
                                     <option value="Swing: I">I - Inspired</option>
                                 </optgroup>
                             </select>
+
                             <div class="tooltip">Choose your trade type and specific setup pattern</div>
                         </div>
 
