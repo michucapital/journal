@@ -555,3 +555,22 @@ button.delete:hover {
 .cancel-btn:hover {
   background-color: #c0392b;
 }
+
+/* Make Execution column only as wide as its header */
+#tradesTable th:nth-child(8), 
+#tradesTable td:nth-child(8) {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+/* Slightly reduce R:R column width */
+#tradesTable th:nth-child(5), 
+#tradesTable td:nth-child(5) {
+    width: 60px;
+    text-align: center;
+    padding-left: 8px;
+    padding-right: 8px;
+}
