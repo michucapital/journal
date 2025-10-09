@@ -299,6 +299,22 @@ body {
     background-color: #c0392b;
     border-color: #c0392b;
 }
+button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+button.delete {
+  background-color: #e74c3c;
+  color: #fff;
+  margin-left: 8px;
+}
+
+button.delete:hover {
+  background-color: #c0392b;
+}
 
 /* Status message styling */
 .status-message {
