@@ -373,8 +373,8 @@ class TradingJournal {
           <tr>
             <td>${trade.id}</td>
             <td>${trade.date}</td>
-            <td>${trade.tradeSetup}</td>
             <td>${trade.ticker || ''}</td>
+            <td>${trade.tradeSetup}</td>
             <td>${trade.rr}</td>
             <td class="${trade.pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">${this.formatCurrency(trade.pnl)}</td>
             <td>${trade.activeMgmt}</td>
