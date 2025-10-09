@@ -10,7 +10,6 @@ class TradingJournal {
         this.CSV_HEADER = 'ID,Date,TradeSetup,RR,PnL,ActiveMgmt,Execution,Note';
         this.editId = null; // To track if we are editing an existing trade
 
-
         // Data arrays
         this.trades = [];
         this.nextId = 1;
@@ -65,32 +64,34 @@ class TradingJournal {
             this.trades = [];
             this.nextId = 1;
         }
-        }
-    loadTradeForEdit(id) {
-      const trade = this.trades.find(t => t.id === id);
-      if (!trade) return this.showStatus('Selected trade not found', 'error');
-    
-      this.editId = id;
-    
-      // Load trade data into the form inputs
-      document.getElementById('tradeSetup').value = trade.tradeSetup;
-      document.getElementById('rr').value = trade.rr;
-      document.getElementById('pnl').value = trade.pnl;
-      document.getElementById('activeMgmt').value = trade.activeMgmt;
-      document.getElementById('execution').value = trade.execution;
-      document.getElementById('note').value = trade.note;
-    
-      // Show cancel edit button and change submit button text
-      document.getElementById('cancelEditBtn').style.display = 'inline-block';
-      document.querySelector('.submit-btn').textContent = 'Update Trade';
     }
-    
+
+    // Load trade for edit
+    loadTradeForEdit(id) {
+        const trade = this.trades.find(t => t.id === id);
+        if (!trade) return this.showStatus('Selected trade not found', 'error');
+
+        this.editId = id;
+
+        // Load trade data into the form inputs
+        document.getElementById('tradeSetup').value = trade.tradeSetup;
+        document.getElementById('rr').value = trade.rr;
+        document.getElementById('pnl').value = trade.pnl;
+        document.getElementById('activeMgmt').value = trade.activeMgmt;
+        document.getElementById('execution').value = trade.execution;
+        document.getElementById('note').value = trade.note;
+
+        // Show cancel edit button and change submit button text
+        document.getElementById('cancelEditBtn').style.display = 'inline-block';
+        document.querySelector('.submit-btn').textContent = 'Update Trade';
+    }
+
     cancelEdit() {
-      this.editId = null;
-      document.getElementById('cancelEditBtn').style.display = 'none';
-      document.querySelector('.submit-btn').textContent = 'Add Trade';
-      this.clearForm();
-      this.showStatus('Edit cancelled, new trades will be added', 'info');
+        this.editId = null;
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.querySelector('.submit-btn').textContent = 'Add Trade';
+        this.clearForm();
+        this.showStatus('Edit cancelled, new trades will be added', 'info');
     }
 
     // Save data to browser's localStorage
@@ -106,14 +107,33 @@ class TradingJournal {
     }
 
     getFormData() {
-      return {
-        tradeSetup: document.getElementById('tradeSetup').value,
-        rr: document.getElementById('rr').value.trim(),
-        pnl: document.getElementById('pnl').value,
-        activeMgmt: document.getElementById('activeMgmt').value,
-        execution: document.getElementById('execution').value,
-        note: document.getElementById('note').value.trim(),
-      };
+        return {
+            tradeSetup: document.getElementById('tradeSetup').value,
+            rr: document.getElementById('rr').value.trim(),
+            pnl: document.getElementById('pnl').value,
+            activeMgmt: document.getElementById('activeMgmt').value,
+            execution: document.getElementById('execution').value,
+            note: document.getElementById('note').value.trim(),
+        };
+    }
+
+    validateFormData(formData) {
+        const requiredFields = ['tradeSetup', 'rr', 'pnl', 'activeMgmt', 'execution'];
+
+        for (const field of requiredFields) {
+            if (!formData[field]) {
+                this.showStatus(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field`, 'error');
+                return false;
+            }
+        }
+
+        // Validate PnL is a number
+        if (isNaN(parseFloat(formData.pnl))) {
+            this.showStatus('PnL must be a valid number', 'error');
+            return false;
+        }
+
+        return true;
     }
 
     // ===== EVENT LISTENERS SETUP =====
@@ -144,20 +164,20 @@ class TradingJournal {
                 this.importFromCSV(e.target.files[0]);
                 e.target.value = ''; // Clear file input
             }
-                });
-                // Cancel editing event
-        document.getElementById('cancelEditBtn').addEventListener('click', () => {
-          this.cancelEdit();
-        });
-        
-        // Edit buttons in trade history table: delegate click to tbody
-        document.getElementById('tradesTableBody').addEventListener('click', (e) => {
-          if (e.target && e.target.classList.contains('edit-btn')) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            this.loadTradeForEdit(id);
-          }
         });
 
+        // Cancel editing event
+        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+            this.cancelEdit();
+        });
+
+        // Edit buttons in trade history table: delegate click to tbody
+        document.getElementById('tradesTableBody').addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('edit-btn')) {
+                const id = parseInt(e.target.getAttribute('data-id'));
+                this.loadTradeForEdit(id);
+            }
+        });
 
         // Clear all data button
         const clearBtn = document.getElementById('clearBtn');
@@ -176,18 +196,15 @@ class TradingJournal {
         const pattern = /^\d+(\.\d+)?:1$/;
 
         if (value === '') {
-            // Empty is okay (will be caught by required validation)
             rrInput.classList.remove('invalid', 'valid');
             errorDiv.classList.remove('show');
             return true;
         } else if (pattern.test(value)) {
-            // Valid format
             rrInput.classList.remove('invalid');
             rrInput.classList.add('valid');
             errorDiv.classList.remove('show');
             return true;
         } else {
-            // Invalid format
             rrInput.classList.remove('valid');
             rrInput.classList.add('invalid');
             errorDiv.textContent = 'Format must be X:1 (e.g., 1:1, 1.5:1, 2.3:1)';
@@ -197,62 +214,69 @@ class TradingJournal {
     }
 
     // ===== TRADE MANAGEMENT =====
-        addTrade() {
-      if (!this.validateRRInput()) {
-        this.showStatus('Please fix the R:R format before submitting', 'error');
-        return;
-      }
-      const formData = this.getFormData();
-    
-      if (!this.validateFormData(formData)) return;
-    
-      if (this.editId !== null) {
-        // Update existing trade
-        const tradeIndex = this.trades.findIndex(t => t.id === this.editId);
-        if (tradeIndex === -1) return this.showStatus('Error updating trade: not found', 'error');
-    
-        this.trades[tradeIndex] = {
-          id: this.editId,
-          date: this.trades[tradeIndex].date, // Preserve the original date
-          tradeSetup: formData.tradeSetup,
-          rr: formData.rr,
-          pnl: parseFloat(formData.pnl),
-          activeMgmt: formData.activeMgmt,
-          execution: formData.execution,
-          note: formData.note || '',
-        };
-    
-        this.showStatus(`Trade #${this.editId} updated successfully!`, 'success');
-    
-        this.editId = null;
-    
-        // Reset submit button and hide cancel button
-        document.querySelector('.submit-btn').textContent = 'Add Trade';
-        document.getElementById('cancelEditBtn').style.display = 'none';
-    
-      } else {
-        // Add new trade
-        const newTrade = {
-          id: this.nextId,
-          date: new Date().toISOString().split('T')[0],
-          tradeSetup: formData.tradeSetup,
-          rr: formData.rr,
-          pnl: parseFloat(formData.pnl),
-          activeMgmt: formData.activeMgmt,
-          execution: formData.execution,
-          note: formData.note || '',
-        };
-    
-        this.trades.push(newTrade);
-        this.nextId++;
-        this.showStatus(`Trade #${newTrade.id} added successfully!`, 'success');
-      }
-    
-      this.saveDataToStorage();
-      this.updateDisplay();
-      this.clearForm();
+    addTrade() {
+        if (!this.validateRRInput()) {
+            this.showStatus('Please fix the R:R format before submitting', 'error');
+            return;
+        }
+        const formData = this.getFormData();
+
+        if (!this.validateFormData(formData)) return;
+
+        if (this.editId !== null) {
+            // Update existing trade
+            const tradeIndex = this.trades.findIndex(t => t.id === this.editId);
+            if (tradeIndex === -1) return this.showStatus('Error updating trade: not found', 'error');
+
+            this.trades[tradeIndex] = {
+                id: this.editId,
+                date: this.trades[tradeIndex].date, // Preserve the original date
+                tradeSetup: formData.tradeSetup,
+                rr: formData.rr,
+                pnl: parseFloat(formData.pnl),
+                activeMgmt: formData.activeMgmt,
+                execution: formData.execution,
+                note: formData.note || '',
+            };
+
+            this.showStatus(`Trade #${this.editId} updated successfully!`, 'success');
+
+            this.editId = null;
+
+            // Reset submit button and hide cancel button
+            document.querySelector('.submit-btn').textContent = 'Add Trade';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+
+        } else {
+            // Add new trade
+            const newTrade = {
+                id: this.nextId,
+                date: new Date().toISOString().split('T')[0],
+                tradeSetup: formData.tradeSetup,
+                rr: formData.rr,
+                pnl: parseFloat(formData.pnl),
+                activeMgmt: formData.activeMgmt,
+                execution: formData.execution,
+                note: formData.note || '',
+            };
+
+            this.trades.push(newTrade);
+            this.nextId++;
+            this.showStatus(`Trade #${newTrade.id} added successfully!`, 'success');
+        }
+
+        this.saveDataToStorage();
+        this.updateDisplay();
+        this.clearForm();
     }
 
+    clearForm() {
+        document.getElementById('tradeForm').reset();
+
+        const rrInput = document.getElementById('rr');
+        rrInput.classList.remove('valid', 'invalid');
+        document.getElementById('rrError').classList.remove('show');
+    }
 
     // ===== DISPLAY UPDATES =====
     updateDisplay() {
@@ -355,7 +379,6 @@ class TradingJournal {
             <td><button class="edit-btn" data-id="${trade.id}">Edit</button></td>
           </tr>
         `).join('');
-
     }
 
     // ===== CSV IMPORT/EXPORT =====
@@ -569,7 +592,6 @@ class TradingJournal {
         statusDiv.textContent = message;
         statusDiv.className = `status-message ${type}`;
 
-        // Auto-hide after 5 seconds
         setTimeout(() => {
             statusDiv.className = 'status-message';
         }, 5000);
