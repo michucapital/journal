@@ -80,6 +80,8 @@ class TradingJournal {
         document.getElementById('activeMgmt').value = trade.activeMgmt;
         document.getElementById('execution').value = trade.execution;
         document.getElementById('note').value = trade.note;
+        document.getElementById('ticker').value = trade.ticker || '';
+
 
         // Show cancel edit button and change submit button text
         document.getElementById('cancelEditBtn').style.display = 'inline-block';
@@ -109,6 +111,7 @@ class TradingJournal {
     getFormData() {
         return {
             tradeSetup: document.getElementById('tradeSetup').value,
+            ticker: document.getElementById('ticker').value.trim(),
             rr: document.getElementById('rr').value.trim(),
             pnl: document.getElementById('pnl').value,
             activeMgmt: document.getElementById('activeMgmt').value,
@@ -118,7 +121,7 @@ class TradingJournal {
     }
 
     validateFormData(formData) {
-        const requiredFields = ['tradeSetup', 'rr', 'pnl', 'activeMgmt', 'execution'];
+        const requiredFields = ['tradeSetup', 'ticker', 'rr', 'pnl', 'activeMgmt', 'execution'];
 
         for (const field of requiredFields) {
             if (!formData[field]) {
@@ -272,7 +275,7 @@ class TradingJournal {
 
     clearForm() {
         document.getElementById('tradeForm').reset();
-
+        document.getElementById('ticker').value = '';
         const rrInput = document.getElementById('rr');
         rrInput.classList.remove('valid', 'invalid');
         document.getElementById('rrError').classList.remove('show');
@@ -371,6 +374,7 @@ class TradingJournal {
             <td>${trade.id}</td>
             <td>${trade.date}</td>
             <td>${trade.tradeSetup}</td>
+            <td>${trade.ticker || ''}</td>
             <td>${trade.rr}</td>
             <td class="${trade.pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">${this.formatCurrency(trade.pnl)}</td>
             <td>${trade.activeMgmt}</td>
