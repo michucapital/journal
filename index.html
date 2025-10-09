@@ -7,14 +7,10 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Main container for the entire app -->
     <div class="app-container">
-
-        <!-- Header section with title and stats dashboard -->
         <header class="header">
             <h1>Crypto Trading Journal</h1>
             <div class="stats-dashboard">
-                <!-- Overall stats section -->
                 <div class="stats-section">
                     <h3>Overall Performance</h3>
                     <div class="stats-grid">
@@ -40,8 +36,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Scalp stats section -->
                 <div class="stats-section">
                     <h3>Scalp Performance</h3>
                     <div class="stats-grid">
@@ -59,8 +53,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Swing stats section -->
                 <div class="stats-section">
                     <h3>Swing Performance</h3>
                     <div class="stats-grid">
@@ -81,19 +73,13 @@
             </div>
         </header>
 
-        <!-- Main content area with form and history -->
         <main class="main-content">
-
-            <!-- Left panel: Trade entry form -->
             <section class="left-panel">
                 <div class="form-container">
                     <h2>Add New Trade</h2>
                     <form id="tradeForm">
-
-                        <!-- Trade Setup dropdown -->
                         <div class="form-group">
                             <label for="tradeSetup">Trade Type & Setup *</label>
-                            <!-- Relevant snippet from index.html -->
                             <select id="tradeSetup" required>
                                 <option value="">Select trade setup...</option>
                                 <optgroup label="Scalp">
@@ -108,17 +94,15 @@
                                     <option value="Swing: I">I - Inspired</option>
                                 </optgroup>
                             </select>
-
                             <div class="tooltip">Choose your trade type and specific setup pattern</div>
                         </div>
-                        <!-- Ticker input -->
+
                         <div class="form-group">
                             <label for="ticker">Ticker *</label>
                             <input type="text" id="ticker" placeholder="e.g. BTCUSDT" required maxlength="15" />
                             <div class="tooltip">Enter the asset ticker symbol</div>
                         </div>
 
-                        <!-- Risk:Reward ratio input -->
                         <div class="form-group">
                             <label for="rr">R:R Ratio *</label>
                             <input type="text" id="rr" placeholder="1.5:1" required pattern="^\d+(\.\d+)?:1$">
@@ -126,26 +110,19 @@
                             <div id="rrError" class="error-message"></div>
                         </div>
 
-                        <!-- PnL input -->
                         <div class="form-group">
                             <label for="pnl">PnL (USD) *</label>
                             <input type="number" id="pnl" step="0.01" placeholder="150.00" required>
                             <div class="tooltip">Profit/Loss in USD (use negative for losses)</div>
                         </div>
 
-                        <!-- Active Management dropdown -->
+                        <!-- Changed for active management: now a free entry box -->
                         <div class="form-group">
-                            <label for="activeMgmt">Active Management *</label>
-                            <select id="activeMgmt" required>
-                                <option value="">Select management result...</option>
-                                <option value="+EV">+EV (Positive Expected Value)</option>
-                                <option value="-EV">-EV (Negative Expected Value)</option>
-                                <option value="N/A">N/A (Passive/No Active Management)</option>
-                            </select>
-                            <div class="tooltip">Rate whether active management decisions helped or hurt</div>
+                            <label for="activeMgmt">Active Management ($ saved/lost or N/A) *</label>
+                            <input type="text" id="activeMgmt" placeholder="e.g. 25.50 or -10 or N/A" required>
+                            <div class="tooltip">Type the $ amount saved/lost through active management or N/A for passive trades</div>
                         </div>
 
-                        <!-- Execution quality dropdown -->
                         <div class="form-group">
                             <label for="execution">Execution Quality *</label>
                             <select id="execution" required>
@@ -157,24 +134,19 @@
                             <div class="tooltip">Self-assess your trade planning and execution quality</div>
                         </div>
 
-                        <!-- Optional notes -->
                         <div class="form-group">
                             <label for="note">Notes (Optional)</label>
                             <textarea id="note" rows="3" placeholder="Additional context or observations..."></textarea>
                             <div class="tooltip">Optional qualitative remarks about the trade</div>
                         </div>
 
-                        <!-- Submit button -->
                         <button type="submit" class="submit-btn">Add Trade</button>
                         <button type="button" id="cancelEditBtn" class="cancel-btn" style="display:none;">Cancel Edit</button>
                     </form>
                 </div>
             </section>
 
-            <!-- Right panel: Trade history and controls -->
             <section class="right-panel">
-
-                <!-- Export/Import controls -->
                 <div class="controls-section">
                     <h2>Data Management</h2>
                     <div class="control-buttons">
@@ -186,7 +158,6 @@
                     <div id="importStatus" class="status-message"></div>
                 </div>
 
-                <!-- Trade history table -->
                 <div class="history-section">
                     <h2>Trade History</h2>
                     <div class="table-container">
@@ -215,8 +186,6 @@
             </section>
         </main>
     </div>
-
-    <!-- Link to JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
