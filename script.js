@@ -223,63 +223,58 @@ class TradingJournal {
             return;
         }
         const formData = this.getFormData();
-
+    
         if (!this.validateFormData(formData)) return;
-
+    
         if (this.editId !== null) {
             // Update existing trade
             const tradeIndex = this.trades.findIndex(t => t.id === this.editId);
             if (tradeIndex === -1) return this.showStatus('Error updating trade: not found', 'error');
-
+    
             this.trades[tradeIndex] = {
                 id: this.editId,
                 date: this.trades[tradeIndex].date, // Preserve the original date
                 tradeSetup: formData.tradeSetup,
+                ticker: formData.ticker, // <- ADDED LINE
                 rr: formData.rr,
                 pnl: parseFloat(formData.pnl),
                 activeMgmt: formData.activeMgmt,
                 execution: formData.execution,
                 note: formData.note || '',
             };
-
+    
             this.showStatus(`Trade #${this.editId} updated successfully!`, 'success');
-
+    
             this.editId = null;
-
+    
             // Reset submit button and hide cancel button
             document.querySelector('.submit-btn').textContent = 'Add Trade';
             document.getElementById('cancelEditBtn').style.display = 'none';
-
+    
         } else {
             // Add new trade
             const newTrade = {
                 id: this.nextId,
                 date: new Date().toISOString().split('T')[0],
                 tradeSetup: formData.tradeSetup,
+                ticker: formData.ticker, // <- ADDED LINE
                 rr: formData.rr,
                 pnl: parseFloat(formData.pnl),
                 activeMgmt: formData.activeMgmt,
                 execution: formData.execution,
                 note: formData.note || '',
             };
-
+    
             this.trades.push(newTrade);
             this.nextId++;
             this.showStatus(`Trade #${newTrade.id} added successfully!`, 'success');
         }
-
+    
         this.saveDataToStorage();
         this.updateDisplay();
         this.clearForm();
     }
-
-    clearForm() {
-        document.getElementById('tradeForm').reset();
-        document.getElementById('ticker').value = '';
-        const rrInput = document.getElementById('rr');
-        rrInput.classList.remove('valid', 'invalid');
-        document.getElementById('rrError').classList.remove('show');
-    }
+    
 
     // ===== DISPLAY UPDATES =====
     updateDisplay() {
