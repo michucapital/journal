@@ -82,7 +82,6 @@ class TradingJournal {
         document.getElementById('note').value = trade.note;
         document.getElementById('ticker').value = trade.ticker || '';
 
-
         // Show cancel edit button and change submit button text
         document.getElementById('cancelEditBtn').style.display = 'inline-block';
         document.querySelector('.submit-btn').textContent = 'Update Trade';
@@ -174,11 +173,16 @@ class TradingJournal {
             this.cancelEdit();
         });
 
-        // Edit buttons in trade history table: delegate click to tbody
+        // Edit and Delete buttons in trade history table: delegate click to tbody
         document.getElementById('tradesTableBody').addEventListener('click', (e) => {
             if (e.target && e.target.classList.contains('edit-btn')) {
                 const id = parseInt(e.target.getAttribute('data-id'));
                 this.loadTradeForEdit(id);
+            }
+            // ---- Handle delete button ----
+            if (e.target && e.target.classList.contains('delete-btn')) {
+                const id = parseInt(e.target.getAttribute('data-id'));
+                this.deleteTrade(id);
             }
         });
 
@@ -223,58 +227,73 @@ class TradingJournal {
             return;
         }
         const formData = this.getFormData();
-    
+
         if (!this.validateFormData(formData)) return;
-    
+
         if (this.editId !== null) {
             // Update existing trade
             const tradeIndex = this.trades.findIndex(t => t.id === this.editId);
             if (tradeIndex === -1) return this.showStatus('Error updating trade: not found', 'error');
-    
+
             this.trades[tradeIndex] = {
                 id: this.editId,
                 date: this.trades[tradeIndex].date, // Preserve the original date
                 tradeSetup: formData.tradeSetup,
-                ticker: formData.ticker, // <- ADDED LINE
+                ticker: formData.ticker,
                 rr: formData.rr,
                 pnl: parseFloat(formData.pnl),
                 activeMgmt: formData.activeMgmt,
                 execution: formData.execution,
                 note: formData.note || '',
             };
-    
+
             this.showStatus(`Trade #${this.editId} updated successfully!`, 'success');
-    
+
             this.editId = null;
-    
+
             // Reset submit button and hide cancel button
             document.querySelector('.submit-btn').textContent = 'Add Trade';
             document.getElementById('cancelEditBtn').style.display = 'none';
-    
+
         } else {
             // Add new trade
             const newTrade = {
                 id: this.nextId,
                 date: new Date().toISOString().split('T')[0],
                 tradeSetup: formData.tradeSetup,
-                ticker: formData.ticker, // <- ADDED LINE
+                ticker: formData.ticker,
                 rr: formData.rr,
                 pnl: parseFloat(formData.pnl),
                 activeMgmt: formData.activeMgmt,
                 execution: formData.execution,
                 note: formData.note || '',
             };
-    
+
             this.trades.push(newTrade);
             this.nextId++;
             this.showStatus(`Trade #${newTrade.id} added successfully!`, 'success');
         }
-    
+
         this.saveDataToStorage();
         this.updateDisplay();
         this.clearForm();
     }
-    
+
+    // ---- NEW: DELETE TRADE ----
+    deleteTrade(id) {
+        // Remove the trade with this id
+        const index = this.trades.findIndex(t => t.id === id);
+        if (index !== -1) {
+            if (confirm(`Delete trade #${id}? This cannot be undone.`)) {
+                this.trades.splice(index, 1);
+                this.saveDataToStorage();
+                this.updateDisplay();
+                this.showStatus(`Trade #${id} deleted.`, 'success');
+            }
+        } else {
+            this.showStatus('Trade not found for deletion.', 'error');
+        }
+    }
 
     // ===== DISPLAY UPDATES =====
     updateDisplay() {
@@ -375,7 +394,10 @@ class TradingJournal {
             <td>${trade.activeMgmt}</td>
             <td>${trade.execution}</td>
             <td>${trade.note}</td>
-            <td><button class="edit-btn" data-id="${trade.id}">Edit</button></td>
+            <td>
+                <button class="edit-btn" data-id="${trade.id}">Edit</button>
+                <button class="delete-btn" data-id="${trade.id}">Delete</button>
+            </td>
           </tr>
         `).join('');
     }
@@ -594,6 +616,18 @@ class TradingJournal {
         setTimeout(() => {
             statusDiv.className = 'status-message';
         }, 5000);
+    }
+
+    clearForm() {
+        // Clear all form input fields
+        document.getElementById('tradeSetup').value = '';
+        document.getElementById('rr').value = '';
+        document.getElementById('pnl').value = '';
+        document.getElementById('activeMgmt').value = '';
+        document.getElementById('execution').value = '';
+        document.getElementById('note').value = '';
+        document.getElementById('ticker').value = '';
+        document.getElementById('rrError').textContent = '';
     }
 }
 
